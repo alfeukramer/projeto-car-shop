@@ -2,11 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import { isValidObjectId } from 'mongoose';
 import CarService from '../Services/carService';
 import ICar from '../Interfaces/ICar';
-import InvalidMongoId from '../middleware/invalidIdError';
-import CarNotFound from '../middleware/CarNotFound';
-
-const INVALID_ERROR_MESSAGE = 'Invalid mongo id';
-const NOT_FOUND_ERROR = 'Car not found';
 
 export default class CarController { 
   private req: Request;
@@ -43,11 +38,11 @@ export default class CarController {
   public async getById() {
     const { id } = this.req.params;
     if (!isValidObjectId(id)) {
-      throw new InvalidMongoId(INVALID_ERROR_MESSAGE);
+      return this.res.status(422).json({ message: 'Invalid mongo id' });
     }
     const carById = await this.service.findById(id);
     if (!carById) {
-      throw new CarNotFound(NOT_FOUND_ERROR);
+      return this.res.status(404).json({ message: 'Car not found' });
     }
     return this.res.status(200).json(carById);
   }
@@ -65,11 +60,11 @@ export default class CarController {
     };
 
     if (!isValidObjectId(id)) {
-      throw new InvalidMongoId(INVALID_ERROR_MESSAGE);
+      return this.res.status(422).json({ message: 'Invalid mongo id' });
     }
     const updatedCar = await this.service.updateById(id, car);
     if (!updatedCar) {
-      throw new CarNotFound(NOT_FOUND_ERROR);
+      return this.res.status(404).json({ message: 'Car not found' });
     }
     return this.res.status(200).json(updatedCar);
   }
