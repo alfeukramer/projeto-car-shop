@@ -1,12 +1,13 @@
-import { Schema, Model, models, model } from 'mongoose';
+// import { Schema, Model, models, model } from 'mongoose';
 import IMotorcycle from '../Interfaces/IMotorcycle';
+import AbstractODM from './AbstractODM';
 
-export default class MotorcycleODM {
-  private schema: Schema;
-  private model: Model<IMotorcycle>;
+export default class MotorcycleODM extends AbstractODM<IMotorcycle> {
+  // private schema: Schema;
+  // private model: Model<IMotorcycle>;
 
   constructor() {
-    this.schema = new Schema<IMotorcycle>({
+    const schema = {
       model: { type: String, required: true },
       year: { type: Number, required: true },
       color: { type: String, required: true },
@@ -14,11 +15,12 @@ export default class MotorcycleODM {
       buyValue: { type: Number, required: true },
       category: { type: String, required: true },
       engineCapacity: { type: Number, required: true },
-    });
-    this.model = models.Motorcycles || model('Motorcycle', this.schema);
+    };
+    super(schema, 'cars');
   }
   
-  public async create(motorcycle: IMotorcycle): Promise<IMotorcycle> {
-    return this.model.create({ ...motorcycle });
-  }
+  // this.model = models.Motorcycles || model('Motorcycle', this.schema);
+  // public async create(motorcycle: IMotorcycle): Promise<IMotorcycle> {
+  //   return this.model.create({ ...motorcycle });
+  // }
 }
