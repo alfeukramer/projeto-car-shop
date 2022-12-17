@@ -25,7 +25,6 @@ export default class MotorcycleController {
       buyValue: this.req.body.buyValue,
       category: this.req.body.category,
       engineCapacity: this.req.body.engineCapacity,
-
     };
     const newMotorcycle = await this.service.create(motorcycle);
     this.res.status(201).json(newMotorcycle);
@@ -46,5 +45,27 @@ export default class MotorcycleController {
       return this.res.status(404).json({ message: 'Motorcycle not found' });
     }
     return this.res.status(200).json(motoById);
+  }
+
+  public async updateById() {
+    const { id } = this.req.params;
+    const motorcycle: IMotorcycle = {
+      model: this.req.body.model,
+      year: this.req.body.year,
+      color: this.req.body.color,
+      status: this.req.body.status,
+      buyValue: this.req.body.buyValue,
+      category: this.req.body.category,
+      engineCapacity: this.req.body.engineCapacity,
+    };
+
+    if (!isValidObjectId(id)) {
+      return this.res.status(422).json({ message: 'Invalid mongo id' });
+    }
+    const updatedMotorcycle = await this.service.updateById(id, motorcycle);
+    if (!updatedMotorcycle) {
+      return this.res.status(404).json({ message: 'Motorcycle not found' });
+    }
+    return this.res.status(200).json(updatedMotorcycle);
   }
 }
